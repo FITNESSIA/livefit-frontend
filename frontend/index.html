@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiveFit - Tu App de Fitness</title>
+    <style>
+        /* Estilos básicos */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            background-color: #2a9d8f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+        }
+        footer {
+            background-color: #2a9d8f;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        button {
+            background-color: #e76f51;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #d9534f;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input, select {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bienvenido a LiveFit</h1>
+    </header>
+    <main>
+        <p>Esta es tu aplicación de salud y fitness.</p>
+
+        <button onclick="fetchBackendMessage()">Ver mensaje del servidor</button>
+        <p id="serverMessage"></p>
+
+        <h2>Registro de Usuario</h2>
+        <form id="registerForm">
+            <input type="text" name="name" placeholder="Nombre" required><br>
+            <input type="email" name="email" placeholder="Email" required><br>
+            <select name="subscription">
+                <option value="free">Gratis</option>
+                <option value="premium">Premium</option>
+            </select><br>
+            <button type="submit">Registrarse</button>
+        </form>
+        <p id="registerMessage"></p>
+    </main>
+    <footer>
+        <p>&copy; 2024 LiveFit</p>
+    </footer>
+    <script>
+        // Función para obtener el mensaje del servidor
+        function fetchBackendMessage() {
+            fetch('http://localhost:3000')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('serverMessage').innerText = data;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Manejar el envío del formulario de registro
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                subscription: formData.get('subscription')
+            };
+
+            fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(message => {
+                document.getElementById('registerMessage').innerText = message;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
