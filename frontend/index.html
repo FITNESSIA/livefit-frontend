@@ -1,35 +1,57 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LiveFit - Tu App de Fitness para mantenerte en forma.">
+    <meta name="keywords" content="fitness, ejercicio, salud, livefit, deporte">
     <title>LiveFit - Tu App de Fitness</title>
+    
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=9758440955"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '9758440955');
+    </script>
+
+    <!-- Estilos CSS -->
     <style>
-        /* Estilos básicos */
+        /* Estilos generales */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+
         header {
             background-color: #2a9d8f;
             color: white;
             padding: 20px;
             text-align: center;
         }
+
         main {
             padding: 20px;
+            flex: 1;
+            /* Flex: 1 permite que el contenido ocupe todo el espacio disponible antes del footer */
         }
+
         footer {
             background-color: #2a9d8f;
             color: white;
             text-align: center;
             padding: 10px;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
         }
+
         button {
             background-color: #e76f51;
             color: white;
@@ -37,50 +59,100 @@
             padding: 10px 20px;
             cursor: pointer;
             border-radius: 5px;
+            transition: background-color 0.3s;
         }
+
         button:hover {
             background-color: #d9534f;
         }
+
         form {
             margin-top: 20px;
         }
-        input, select {
+
+        input, select, textarea {
             padding: 10px;
             margin-bottom: 10px;
             width: 100%;
             max-width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #2a9d8f;
+            outline: none;
+        }
+
+        /* Agregamos espacio inferior al formulario para evitar que el footer lo cubra */
+        form {
+            padding-bottom: 20px;
         }
     </style>
 </head>
+
 <body>
     <header>
         <h1>Bienvenido a LiveFit</h1>
     </header>
+
     <main>
         <p>Esta es tu aplicación de salud y fitness.</p>
 
+        <!-- Botón para ver mensaje del servidor -->
         <button onclick="fetchBackendMessage()">Ver mensaje del servidor</button>
         <p id="serverMessage"></p>
 
+        <!-- Formulario de Registro de Usuario -->
         <h2>Registro de Usuario</h2>
         <form id="registerForm">
-            <input type="text" name="name" placeholder="Nombre" required><br>
-            <input type="email" name="email" placeholder="Email" required><br>
-            <select name="subscription">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" name="name" placeholder="Nombre" required><br>
+            
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Email" required><br>
+            
+            <label for="subscription">Tipo de suscripción</label>
+            <select id="subscription" name="subscription">
                 <option value="free">Gratis</option>
                 <option value="premium">Premium</option>
             </select><br>
+            
             <button type="submit">Registrarse</button>
         </form>
         <p id="registerMessage"></p>
+
+        <!-- Formulario de Contacto (Netlify) -->
+        <h2>Formulario de Contacto</h2>
+        <form name="contact" method="POST" data-netlify="true">
+            <input type="hidden" name="form-name" value="contact">
+            <p>
+              <label for="contact-name">Nombre</label>
+              <input type="text" id="contact-name" name="name" required>
+            </p>
+            <p>
+              <label for="contact-email">Email</label>
+              <input type="email" id="contact-email" name="email" required>
+            </p>
+            <p>
+              <label for="contact-message">Mensaje</label>
+              <textarea id="contact-message" name="message" required></textarea>
+            </p>
+            <p>
+              <button type="submit">Enviar</button>
+            </p>
+        </form>
     </main>
+
     <footer>
         <p>&copy; 2024 LiveFit</p>
     </footer>
+
+    <!-- JavaScript -->
     <script>
         // Función para obtener el mensaje del servidor
         function fetchBackendMessage() {
-            fetch('http://localhost:3000')
+            fetch('https://amazing-phoenix-53b972.netlify.app/')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('serverMessage').innerText = data;
@@ -99,7 +171,7 @@
                 subscription: formData.get('subscription')
             };
 
-            fetch('http://localhost:3000/register', {
+            fetch('https://amazing-phoenix-53b972.netlify.app/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
